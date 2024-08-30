@@ -19,7 +19,7 @@ jobs:
       - name: Install GitHub CLI
         run: |
             sudo apt-get install gh
-            
+
       - name: Fetch all branches and history
         run: git fetch --all
 
@@ -39,13 +39,13 @@ jobs:
       - name: Create Pull Request from the PR commit to main
         id: create_pr
         env:
-          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+          GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
         run: |
           gh pr create --base main --head pr-to-main-${{ env.PR_SHA }} --title "Auto Merge: ${{ env.BRANCH_NAME }} to Main" --body "Automated PR to merge changes from ${{ env.BRANCH_NAME }} to main after passing QA."
 
       - name: Auto Merge the new Pull Request
         env:
-          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+          GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
         run: |
           gh pr merge pr-to-main-${{ env.PR_SHA }} --auto --squash --delete-branch
 
@@ -59,3 +59,4 @@ jobs:
               repo: context.repo.repo,
               body: "A new pull request has been automatically created and merged to main."
             })
+            
